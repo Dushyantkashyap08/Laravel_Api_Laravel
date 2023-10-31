@@ -6,6 +6,7 @@ use illuminate\support\facades\file;
 use illuminate\support\facades\storage;
 use App\Http\Requests\getClientOriginalExtension;
 use App\Models\Studentdata;
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 
@@ -13,19 +14,30 @@ class ApiController extends Controller
 {
     public function form_submit(Request $request)
     {
-        $add = new Studentdata;
-
-        if($request->isMethod('post'))
-        {
-            $add->name=$request->get('name');
-            $add->age=$request->get('age');
-            $add->city=$request->get('city');
-            $add->save();
+        try {
+            $add = new Studentdata;
+    
+            if ($request->isMethod('post')) {
+                $add->name = $request->get('name');
+                $add->age = $request->get('age');
+                $add->city = $request->get('city');
+                $add->save();
+                
+                return response()->json([
+                    "message" => "Successfully added record",
+                ], 201); // HTTP status code 201 for a successful creation
+            } else {
+                return response()->json([
+                    "message" => "Method not allowed",
+                ], 405); // HTTP status code 405 for method not allowed
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                "message" => "Error: " . $e->getMessage(),
+            ], 500); // HTTP status code 500 for internal server error
         }
-        return response()->json([
-            "message" => "Successfully added record",
-        ],201);//201 here is called HTTP status code which will tell about status of data inserted or not
     }
+    
 
     public function display_form()
     {
@@ -117,5 +129,15 @@ class ApiController extends Controller
             return ["msg" => "Failed to upload file"];
         }
            
+    }
+
+    public function Carbon_function()
+    {
+        // return Carbon::now()->format("Y-m-d H:i:s"); this is UTC time format 
+        // echo"<br>";
+        $currenttime = Carbon::now('Asia/Kolkata');
+        echo $currenttime;
+        echo"<hr>";
+       
     }
 }

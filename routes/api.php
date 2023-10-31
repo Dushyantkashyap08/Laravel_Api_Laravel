@@ -34,3 +34,6 @@ Route::put('/search-record/{search}',[ApiController::class,'SearchRecord']);
 
 //file upload
 Route::post('/file-upload',[ApiController::class,'FileUpload']);
+
+//carbon function
+Route::get('/carbon',[ApiController::class,'Carbon_function']);
